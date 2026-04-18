@@ -9,6 +9,7 @@ type GuestbookRow = {
   name: string | null;
   message: string | null;
   created_at: string | null;
+  user_id: string | null;
 };
 
 function mapRow(row: GuestbookRow): GuestbookEntry {
@@ -25,7 +26,7 @@ function mapRow(row: GuestbookRow): GuestbookEntry {
 export async function listGuestbookEntries(): Promise<GuestbookEntry[]> {
   const { data, error } = await supabase
     .from("guestbook")
-    .select("id, name, message, created_at")
+    .select("id, name, message, created_at, user_id")
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -35,10 +36,20 @@ export async function listGuestbookEntries(): Promise<GuestbookEntry[]> {
 export async function insertGuestbookEntry(
   payload: GuestbookInsertPayload
 ): Promise<GuestbookEntry> {
+  const { data: sessionData } = await supabase.auth.getSession();
+  const uid = sessionData.session?.user.id;
+  if (!uid) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
   const { data, error } = await supabase
     .from("guestbook")
-    .insert({ name: payload.name, message: payload.message })
-    .select("id, name, message, created_at")
+    .insert({
+      name: payload.name,
+      message: payload.message,
+      user_id: uid,
+    })
+    .select("id, name, message, created_at, user_id")
     .single();
 
   if (error) throw error;

@@ -1,0 +1,39 @@
+.user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  max-width: 100%;
+}
+
+.user-bar__email {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 11rem;
+}
+
+.user-bar__logout {
+  flex-shrink: 0;
+  padding: 0.4rem 0.65rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid #e2e5ea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.user-bar__logout:hover:not(:disabled) {
+  background: var(--bg);
+}
+
+.user-bar__logout:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
